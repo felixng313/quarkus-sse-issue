@@ -1,0 +1,62 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version "1.9.21"
+    id "org.jetbrains.kotlin.plugin.allopen" version "1.9.21"
+    id 'org.kordamp.gradle.jandex' version "1.1.0"
+    id 'io.quarkus'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+allOpen {
+    annotation("jakarta.wsrs.Path")
+    annotation("jakarta.enterprise.context.ApplicationScoped")
+    annotation("io.quarkus.test.junit.QuarkusTest")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_17
+    kotlinOptions.javaParameters = true
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    api enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    api 'io.quarkus:quarkus-resteasy-reactive-jackson'
+    api 'io.quarkus:quarkus-rest-client-reactive-jackson'
+    api 'io.quarkus:quarkus-vertx'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+}
+
+test {
+    useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(19)
+}
+
+tasks.named('quarkusDependenciesBuild') {
+    dependsOn('jandex')
+}
+
+tasks.named('quarkusGenerateCodeTests') {
+    dependsOn('jandex')
+}
