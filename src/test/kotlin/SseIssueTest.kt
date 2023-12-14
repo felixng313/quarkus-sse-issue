@@ -31,4 +31,17 @@ class SseIssueTest {
         assertTrue(res.size == 1)
         assertTrue(res[0] == content)
     }
+
+    @Test
+    fun randomlyFail() {
+        val res = testSseIssueRestClient.randomlyFail().collect().asList().await().indefinitely()
+
+        val content = "x"
+
+        assertTrue(res.size == 5000)
+        res.forEachIndexed { index, it ->
+            println(index)
+            assertTrue(it == content)
+        }
+    }
 }

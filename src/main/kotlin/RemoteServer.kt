@@ -25,4 +25,17 @@ class RemoteServer {
 
         return Multi.createFrom().item(content)
     }
+
+    @GET
+    @Path("sse-randomly-fail")
+    @Produces(MediaType.SERVER_SENT_EVENTS)
+    fun sseRandomlyFail(): Multi<String?> {
+
+        var content = mutableListOf<String?>()
+        for (i in 1..5000) {
+            content.add("x")
+        }
+
+        return Multi.createFrom().items(*(content.toTypedArray()))
+    }
 }

@@ -25,6 +25,12 @@ interface TestSseIssueRestClient {
     @Path("/sse-fail")
     fun sseFail(): Multi<String>
 
+    @GET
+    @Produces(MediaType.SERVER_SENT_EVENTS)
+    @Path("/sse-randomly-fail")
+    fun randomlyFail(): Multi<String>
+
+
     class TestFilter : Predicate<SseEvent<String?>> {
         override fun test(event: SseEvent<String?>): Boolean {
             println("expect there will show the data content, but actually it's empty.")
